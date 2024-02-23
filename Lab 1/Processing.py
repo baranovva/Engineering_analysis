@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 from scipy.linalg import solve
 from math import sqrt
 
@@ -48,3 +49,32 @@ b = np.array([wood.lambd * wood_T / L_solid, 0, 0, 0, - iron.lambd * iron_T / L_
 x = solve(A, b)
 print(x)
 print(x[2] - x[3], delta_T)
+
+y = np.array([0, 3.33E-4, 6.67E-4, 1E-3, 1.33E-3, 1.67E-3,
+              2E-3, 2.33E-3, 2.67E-3, 3E-3, 3.33E-3, 3.67E-3,
+              4E-3, 4.33E-3, 4.67E-3, 5E-3, 5.33E-3, 5.67E-3,
+              6E-3, 6.33E-3, 6.67E-3, 7E-3, 7.33E-3, 7.67E-3,
+              8E-3, 8.33E-3, 8.67E-3, 9E-3, 9.33E-3, 9.67E-3,
+              1E-2])
+
+Nu_left = np.array([2.47, 4.97, 4.99, 5, 5, 4.99,
+                    4.98, 4.98, 4.97, 4.97, 4.94, 4.92,
+                    4.92, 4.91, 4.91, 4.91, 4.9, 4.9,
+                    4.9, 4.9, 4.89, 4.85, 4.84, 4.83,
+                    4.83, 4.73, 4.59, 4.45, 4.26, 4.16,
+                    2.06])
+
+Nu_right = np.abs(np.array([0, -6.49E-01, -7.44E-01, -9.2E-01, -1.17, -1.47,
+                            -1.8, -2.13, -2.45, -2.77, -3.08, -3.39,
+                            -3.69, -3.99, -4.3, -4.62, -4.94, -5.28,
+                            -5.63, -6.01, -6.39, -6.8, -7.22, -7.66,
+                            -8.11, -8.54, -8.92, -9.21, -9.3, - 9.09,
+                            0]))
+
+plt.scatter(Nu_left, y, label='Левая стенка')
+plt.scatter(Nu_right, y, label='Правая стенка')
+plt.ylabel('y, м')
+plt.xlabel('Nu')
+plt.grid(True)
+plt.legend()
+plt.show()
