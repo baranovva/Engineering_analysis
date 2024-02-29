@@ -69,3 +69,4 @@ plt.xlabel('Nu')
 plt.grid(True)
 plt.legend()
 plt.show()
+
