@@ -1,6 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.linalg import solve
 from math import sqrt
 
 
@@ -26,9 +25,8 @@ delta_T = 279.527 - 274.849
 
 Gr = (g * water.beta * delta_T * L ** 3) / ((water.mu / water.ro) ** 2)
 Pr = water.mu * water.c_p / water.lambd
-Pa = Gr * Pr
 Nu_av = 0.18 * ((Gr * (Pr ** 2)) / (0.2 + Pr)) ** 0.29
-print(Gr, Pr, Pa, Nu_av)
+print(Gr, Pr, Gr * Pr, Nu_av)
 
 v_b = sqrt(g * water.beta * delta_T * H ** 3)
 t_conv = H / v_b
@@ -37,18 +35,11 @@ t_heat_wood = (wood.ro * water.c_p * L_solid ** 2) / wood.lambd
 t_heat_iron = (iron.ro * iron.c_p * L_solid ** 2) / wood.lambd
 print(t_heat_wood, t_heat_iron)
 
-a = Nu_av * water.lambd / L
-
-A = np.array([[1, wood.lambd / L_solid, 0, 0, 0],
-              [1, -a, a, 0, 0],
-              [1, 0, -water.lambd / L, water.lambd / L, 0],
-              [1, 0, 0, -a, a],
-              [1, 0, 0, 0, -iron.lambd / L_solid]])
-
-b = np.array([wood.lambd * wood_T / L_solid, 0, 0, 0, - iron.lambd * iron_T / L_solid])
-x = solve(A, b)
-print(x)
-print(x[2] - x[3], delta_T)
+q = (wood_T - iron_T) / (L_solid / wood.lambd + L_solid / iron.lambd + L / ((0.18 * (Gr * Pr) ** 0.25) * water.lambd))
+print(q)
+T_left = wood_T - q * L_solid / wood.lambd
+T_right = iron_T + q * L_solid / iron.lambd
+print(T_left, T_right, T_left - T_right)
 
 y = np.array([0, 3.33E-4, 6.67E-4, 1E-3, 1.33E-3, 1.67E-3,
               2E-3, 2.33E-3, 2.67E-3, 3E-3, 3.33E-3, 3.67E-3,
